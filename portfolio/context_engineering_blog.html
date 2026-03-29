@@ -1,0 +1,2487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Context Engineering | Tinevimbo</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0d0d0d;
+            --bg-secondary: #161616;
+            --bg-tertiary: #1e1e1e;
+            --bg-code: #1a1a1a;
+            --border: #2a2a2a;
+            --border-light: #333;
+            --text-primary: #e5e5e5;
+            --text-secondary: #a3a3a3;
+            --text-muted: #737373;
+            --accent: #c4c4c4;
+            --accent-dim: #525252;
+            --highlight: #ffffff;
+            --code-keyword: #c586c0;
+            --code-string: #ce9178;
+            --code-function: #dcdcaa;
+            --code-variable: #9cdcfe;
+            --code-comment: #6a9955;
+            --code-number: #b5cea8;
+            --success: #4ade80;
+            --error: #f87171;
+            --warning: #fbbf24;
+            --info: #60a5fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Particle Background */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--accent-dim);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            25% { transform: translateY(-100px) translateX(50px); opacity: 0.5; }
+            50% { transform: translateY(-50px) translateX(-30px); opacity: 0.2; }
+            75% { transform: translateY(-150px) translateX(20px); opacity: 0.4; }
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 100px;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            background: var(--bg-primary);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+
+        .slide.prev {
+            transform: translateX(-100px);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            color: var(--highlight);
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 32px;
+            color: var(--highlight);
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--highlight);
+            margin-bottom: 8px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            max-width: 900px;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .author {
+            font-size: 1.1rem;
+            color: var(--accent-dim);
+            margin-top: 40px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            color: var(--accent-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 12px;
+        }
+
+        /* Typewriter Effect */
+        .typewriter {
+            overflow: hidden;
+            border-right: 3px solid var(--accent);
+            white-space: nowrap;
+            animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--accent) }
+        }
+
+        /* Lists */
+        ul {
+            list-style: none;
+            font-size: 1.15rem;
+            line-height: 1.9;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 24px;
+            color: var(--text-secondary);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .slide.active ul li {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide.active ul li:nth-child(1) { transition-delay: 0.1s; }
+        .slide.active ul li:nth-child(2) { transition-delay: 0.15s; }
+        .slide.active ul li:nth-child(3) { transition-delay: 0.2s; }
+        .slide.active ul li:nth-child(4) { transition-delay: 0.25s; }
+        .slide.active ul li:nth-child(5) { transition-delay: 0.3s; }
+        .slide.active ul li:nth-child(6) { transition-delay: 0.35s; }
+        .slide.active ul li:nth-child(7) { transition-delay: 0.4s; }
+
+        ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 6px;
+            height: 6px;
+            background: var(--accent-dim);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        ul li:hover::before {
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+        }
+
+        ul li strong {
+            color: var(--highlight);
+            font-weight: 500;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 16px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .code-block:hover {
+            border-color: var(--accent-dim);
+            box-shadow: 0 0 20px rgba(82, 82, 82, 0.2);
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .code-block .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 60px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+
+        .code-block:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .code-block .copy-btn:hover {
+            background: var(--accent-dim);
+            color: var(--highlight);
+        }
+
+        .code-block .copy-btn.copied {
+            background: var(--success);
+            color: var(--bg-primary);
+        }
+
+        .code-block .keyword { color: var(--code-keyword); }
+        .code-block .string { color: var(--code-string); }
+        .code-block .function { color: var(--code-function); }
+        .code-block .variable { color: var(--code-variable); }
+        .code-block .comment { color: var(--code-comment); font-style: italic; }
+        .code-block .number { color: var(--code-number); }
+        .code-block .tag { color: #569cd6; }
+        .code-block .attr { color: #9cdcfe; }
+
+        .code-block-small {
+            font-size: 0.75rem;
+            padding: 16px;
+        }
+
+        /* Interactive Demo Box */
+        .demo-box {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-box::before {
+            content: 'INTERACTIVE';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.65rem;
+            color: var(--info);
+            letter-spacing: 0.1em;
+            padding: 2px 8px;
+            border: 1px solid var(--info);
+            border-radius: 4px;
+        }
+
+        /* Animated Counter */
+        .counter {
+            font-size: 4rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--highlight);
+        }
+
+        .counter.counting {
+            animation: countPulse 0.3s ease;
+        }
+
+        @keyframes countPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Diagrams */
+        .diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 24px 0;
+        }
+
+        .diagram svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .box {
+            fill: var(--bg-tertiary);
+            stroke: var(--border);
+            stroke-width: 2;
+            transition: all 0.3s ease;
+        }
+
+        .box:hover {
+            stroke: var(--accent);
+            filter: drop-shadow(0 0 10px rgba(196, 196, 196, 0.2));
+        }
+
+        .box-highlight {
+            fill: var(--bg-secondary);
+            stroke: var(--accent-dim);
+            stroke-width: 2;
+        }
+
+        .box-success {
+            fill: #052e16;
+            stroke: #166534;
+            stroke-width: 2;
+        }
+
+        .box-error {
+            fill: #450a0a;
+            stroke: #991b1b;
+            stroke-width: 2;
+        }
+
+        .arrow {
+            stroke: var(--accent-dim);
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+
+        .arrow-animated {
+            stroke-dasharray: 8;
+            animation: dash 1s linear infinite;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -16; }
+        }
+
+        .label {
+            fill: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            text-anchor: middle;
+        }
+
+        .label-small {
+            fill: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            text-anchor: middle;
+        }
+
+        /* Animated elements */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes grow {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px var(--accent-dim); }
+            50% { box-shadow: 0 0 20px var(--accent-dim), 0 0 30px var(--accent-dim); }
+        }
+
+        .animate { animation: fadeInUp 0.6s ease forwards; }
+        .pulse { animation: pulse 2s ease-in-out infinite; }
+        .glow { animation: glow 2s ease-in-out infinite; }
+
+        /* Quote */
+        .quote {
+            font-size: 1.5rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            border-left: 3px solid var(--accent-dim);
+            padding-left: 28px;
+            margin: 28px 0;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .quote::before {
+            content: '"';
+            position: absolute;
+            left: -20px;
+            top: -20px;
+            font-size: 4rem;
+            color: var(--accent-dim);
+            opacity: 0.3;
+        }
+
+        .quote-author {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-style: normal;
+            margin-top: 12px;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            border-color: var(--accent-dim);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .card h4 {
+            font-size: 1rem;
+            color: var(--highlight);
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .card-compact {
+            padding: 16px;
+        }
+
+        .card-compact h4 {
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .card-compact p {
+            font-size: 0.8rem;
+        }
+
+        /* Expandable Card */
+        .card-expandable {
+            cursor: pointer;
+        }
+
+        .card-expandable .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .card-expandable.expanded .card-content {
+            max-height: 200px;
+        }
+
+        .card-expandable .expand-icon {
+            float: right;
+            transition: transform 0.3s ease;
+        }
+
+        .card-expandable.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 100;
+            background: var(--bg-secondary);
+            padding: 12px 20px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent-dim);
+            color: var(--highlight);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--accent);
+            transform: scale(1.4);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .progress-dot:hover {
+            background: var(--accent-dim);
+            transform: scale(1.2);
+        }
+
+        .slide-counter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            min-width: 50px;
+            text-align: center;
+        }
+
+        /* Title Slide */
+        .slide.title-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: 4.5rem;
+            margin-bottom: 16px;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+
+        .highlight-box:hover {
+            border-color: var(--accent-dim);
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .tag {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.2s ease;
+            cursor: default;
+        }
+
+        .tag:hover {
+            border-color: var(--accent-dim);
+            color: var(--highlight);
+        }
+
+        /* Comparison */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 32px;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .comparison-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .comparison-box:hover {
+            transform: scale(1.02);
+            border-color: var(--accent-dim);
+        }
+
+        .comparison-box h4 {
+            font-size: 1.1rem;
+            color: var(--highlight);
+            margin-bottom: 12px;
+        }
+
+        .comparison-box p {
+            font-size: 0.95rem;
+            margin: 0 auto;
+        }
+
+        .vs {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Scale/Slider diagram */
+        .scale-container {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .scale {
+            height: 8px;
+            background: linear-gradient(to right, var(--error), var(--warning), var(--success));
+            border-radius: 4px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .scale-marker {
+            position: absolute;
+            top: -8px;
+            width: 24px;
+            height: 24px;
+            background: var(--highlight);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            cursor: grab;
+            transition: left 0.3s ease;
+        }
+
+        .scale-marker:hover {
+            transform: translateX(-50%) scale(1.2);
+        }
+
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Stats */
+        .stat {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--highlight);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-value.success { color: var(--success); }
+        .stat-value.error { color: var(--error); }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 1.5s ease;
+            width: 0;
+        }
+
+        .progress-fill.success { background: linear-gradient(90deg, #166534, var(--success)); }
+        .progress-fill.error { background: linear-gradient(90deg, #991b1b, var(--error)); }
+
+        /* Keyboard hint */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 100px;
+            right: 32px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .key {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Timer */
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            background: var(--bg-secondary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        /* Fullscreen Button */
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 100px;
+            width: 40px;
+            height: 40px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: all 0.2s ease;
+        }
+
+        .fullscreen-btn:hover {
+            border-color: var(--accent-dim);
+            color: var(--highlight);
+            transform: scale(1.05);
+        }
+
+        .fullscreen-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Overview Mode */
+        .overview-mode .slide {
+            position: relative;
+            width: calc(25% - 20px);
+            height: 200px;
+            display: inline-block;
+            margin: 10px;
+            opacity: 0.8;
+            transform: scale(0.9);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .overview-mode .slide:hover {
+            opacity: 1;
+            border-color: var(--accent);
+        }
+
+        .overview-mode .slide.active {
+            border-color: var(--success);
+            opacity: 1;
+        }
+
+        .overview-mode .slide * {
+            transform: scale(0.3);
+            transform-origin: top left;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            bottom: calc(100% + 10px);
+        }
+
+        /* Flow items */
+        .flow {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .flow-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .flow-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .flow-arrow {
+            color: var(--accent-dim);
+            font-size: 1.2rem;
+        }
+
+        /* Two column code */
+        .code-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .code-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Inline code */
+        code {
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 0;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .tab.active {
+            background: var(--bg-code);
+            color: var(--highlight);
+            border-color: var(--accent-dim);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Metric Box */
+        .metric-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Live indicator */
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--success);
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        /* Section divider */
+        .section-divider {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .section-divider h2 {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .section-divider p {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles"></div>
+
+    <!-- Timer -->
+    <div class="timer" id="timer">00:00</div>
+
+    <!-- Fullscreen Button -->
+    <button class="fullscreen-btn tooltip" data-tooltip="Fullscreen (F)" id="fullscreenBtn" onclick="toggleFullscreen()">
+        <svg id="fullscreenIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+        </svg>
+    </button>
+
+    <div class="presentation" id="presentation">
+        <!-- SVG Defs -->
+        <svg style="position: absolute; width: 0; height: 0;">
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#525252"/>
+                </marker>
+                <marker id="arrowhead-light" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#737373"/>
+                </marker>
+                <marker id="arrowhead-success" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#4ade80"/>
+                </marker>
+            </defs>
+        </svg>
+
+        <!-- ==================== SLIDE 1: Title ==================== -->
+        <div class="slide title-slide active" data-slide="1">
+            <p class="section-label">The Art of Curating What LLMs See</p>
+            <h1>Context Engineering</h1>
+            <p class="subtitle">Building Effective AI Agents Through Better Context</p>
+            <p class="author">Tinevimbo Musingadi</p>
+            <div style="margin-top: 40px;">
+                <span class="live-indicator"><span class="live-dot"></span> Interactive Presentation</span>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 2: Agenda ==================== -->
+        <div class="slide" data-slide="2">
+            <p class="section-label">Overview</p>
+            <h2>What We'll Cover</h2>
+            <div class="grid-3">
+                <div class="card card-expandable" onclick="this.classList.toggle('expanded')">
+                    <h4>1. Foundation <span class="expand-icon">▼</span></h4>
+                    <p>Transformers & context windows</p>
+                    <div class="card-content">
+                        <p style="margin-top: 12px; font-size: 0.8rem;">Understanding the architectural constraints that make context engineering necessary.</p>
+                    </div>
+                </div>
+                <div class="card card-expandable" onclick="this.classList.toggle('expanded')">
+                    <h4>2. Context Engine <span class="expand-icon">▼</span></h4>
+                    <p>Building the curation system</p>
+                    <div class="card-content">
+                        <p style="margin-top: 12px; font-size: 0.8rem;">Designing systems that decide what to include, exclude, and compress.</p>
+                    </div>
+                </div>
+                <div class="card card-expandable" onclick="this.classList.toggle('expanded')">
+                    <h4>3. Tools & Prompts <span class="expand-icon">▼</span></h4>
+                    <p>Designing for agents</p>
+                    <div class="card-content">
+                        <p style="margin-top: 12px; font-size: 0.8rem;">Writing effective tools and system prompts that maximize agent performance.</p>
+                    </div>
+                </div>
+                <div class="card card-expandable" onclick="this.classList.toggle('expanded')">
+                    <h4>4. Retrieval <span class="expand-icon">▼</span></h4>
+                    <p>RAG & dynamic search</p>
+                    <div class="card-content">
+                        <p style="margin-top: 12px; font-size: 0.8rem;">Just-in-time context strategies and progressive disclosure.</p>
+                    </div>
+                </div>
+                <div class="card card-expandable" onclick="this.classList.toggle('expanded')">
+                    <h4>5. Long Tasks <span class="expand-icon">▼</span></h4>
+                    <p>Memory & compaction</p>
+                    <div class="card-content">
+                        <p style="margin-top: 12px; font-size: 0.8rem;">Techniques for maintaining coherence over extended interactions.</p>
+                    </div>
+                </div>
+                <div class="card card-expandable" onclick="this.classList.toggle('expanded')">
+                    <h4>6. Fine-Tuning <span class="expand-icon">▼</span></h4>
+                    <p>Tool calling with Gemma</p>
+                    <div class="card-content">
+                        <p style="margin-top: 12px; font-size: 0.8rem;">Practical example: improving tool selection from 10% to 80% accuracy.</p>
+                    </div>
+                </div>
+            </div>
+            <p style="margin-top: 24px; font-size: 0.9rem; color: var(--text-muted);">Click any card to expand details</p>
+        </div>
+
+        <!-- ==================== SLIDE 3: Transformer Foundation ==================== -->
+        <div class="slide" data-slide="3">
+            <p class="section-label">Foundation</p>
+            <h2>The Transformer Architecture</h2>
+            <ul>
+                <li>Modern LLMs are built on the <strong>Transformer architecture</strong></li>
+                <li>Every token attends to every other token — creating <strong>n² relationships</strong></li>
+                <li>This enables understanding <strong>contextual meaning</strong> but creates constraints</li>
+                <li>Everything the model "knows" must fit in the <strong>context window</strong></li>
+            </ul>
+            <div class="diagram">
+                <svg width="750" height="160" viewBox="0 0 750 160">
+                    <rect class="box" x="20" y="50" width="120" height="60" rx="8"/>
+                    <text class="label" x="80" y="85">Input Tokens</text>
+                    
+                    <path class="arrow arrow-animated" d="M 140 80 L 200 80"/>
+                    
+                    <rect class="box-highlight" x="210" y="30" width="280" height="100" rx="10"/>
+                    <text class="label" x="350" y="70">Context Window</text>
+                    <text class="label-small" x="350" y="90">n² attention relationships</text>
+                    <text class="label-small" x="350" y="108" style="fill: #525252">[ finite tokens ]</text>
+                    
+                    <path class="arrow arrow-animated" d="M 490 80 L 550 80"/>
+                    
+                    <rect class="box" x="560" y="50" width="120" height="60" rx="8"/>
+                    <text class="label" x="620" y="85">Output</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 4: What is Context ==================== -->
+        <div class="slide" data-slide="4">
+            <p class="section-label">Foundation</p>
+            <h2>What is Context?</h2>
+            <p style="margin-bottom: 24px;">The full set of tokens included when sampling from an LLM:</p>
+            <div class="grid-3">
+                <div class="card tooltip" data-tooltip="Instructions, personality, constraints">
+                    <h4>System Prompts</h4>
+                    <p>Instructions, personality, constraints</p>
+                </div>
+                <div class="card tooltip" data-tooltip="Current request & conversation history">
+                    <h4>User Prompts</h4>
+                    <p>Current request & conversation history</p>
+                </div>
+                <div class="card tooltip" data-tooltip="Results from function calls & APIs">
+                    <h4>Tool Outputs</h4>
+                    <p>Results from function calls & APIs</p>
+                </div>
+                <div class="card tooltip" data-tooltip="Stored facts, preferences, decisions">
+                    <h4>Memory</h4>
+                    <p>Stored facts, preferences, decisions</p>
+                </div>
+                <div class="card tooltip" data-tooltip="RAG results & external knowledge">
+                    <h4>Retrieved Documents</h4>
+                    <p>RAG results & external knowledge</p>
+                </div>
+                <div class="card tooltip" data-tooltip="Reasoning traces & state tracking">
+                    <h4>Plans & Notes</h4>
+                    <p>Reasoning traces & state tracking</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 5: Context Rot Demo ==================== -->
+        <div class="slide" data-slide="5">
+            <p class="section-label">Foundation</p>
+            <h2>Context Rot & Attention Budget</h2>
+            <div class="grid">
+                <div>
+                    <ul>
+                        <li>As tokens increase, recall accuracy <strong>decreases</strong></li>
+                        <li>Models have an "<strong>attention budget</strong>" like working memory</li>
+                        <li>Every new token depletes this budget</li>
+                        <li>Context must be treated as a <strong>finite resource</strong></li>
+                    </ul>
+                    <div class="demo-box" style="margin-top: 20px;">
+                        <p style="font-size: 0.9rem; margin-bottom: 12px;">Token Count Simulator</p>
+                        <div style="display: flex; gap: 20px; align-items: center;">
+                            <input type="range" id="tokenSlider" min="0" max="100" value="30" style="flex: 1; accent-color: var(--accent);">
+                            <span id="tokenCount" class="counter" style="font-size: 2rem;">30K</span>
+                        </div>
+                        <div class="progress-bar" style="margin-top: 12px;">
+                            <div id="recallBar" class="progress-fill success" style="width: 85%; transition: all 0.3s ease;"></div>
+                        </div>
+                        <p id="recallLabel" style="font-size: 0.8rem; color: var(--success); margin-top: 4px;">Recall: 85%</p>
+                    </div>
+                </div>
+                <div class="diagram">
+                    <svg width="320" height="220" viewBox="0 0 320 220">
+                        <line x1="50" y1="180" x2="290" y2="180" stroke="#525252" stroke-width="2"/>
+                        <line x1="50" y1="180" x2="50" y2="30" stroke="#525252" stroke-width="2"/>
+                        <text x="170" y="210" class="label-small">Context Length</text>
+                        <text x="20" y="105" class="label-small" transform="rotate(-90, 20, 105)">Recall</text>
+                        <path d="M 50 50 Q 100 55, 150 80 T 250 160 T 290 175" stroke="#c4c4c4" stroke-width="3" fill="none"/>
+                        <circle cx="150" cy="80" r="6" fill="#4ade80"/>
+                        <text x="160" y="70" class="label-small" style="fill: #4ade80">Sweet spot</text>
+                        <circle cx="260" cy="165" r="6" fill="#f87171"/>
+                        <text x="230" y="150" class="label-small" style="fill: #f87171">Rot</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 6: Prompt vs Context Engineering ==================== -->
+        <div class="slide" data-slide="6">
+            <p class="section-label">Foundation</p>
+            <h2>Prompt vs Context Engineering</h2>
+            <div class="comparison">
+                <div class="comparison-box">
+                    <h4>Prompt Engineering</h4>
+                    <p>Optimized for <strong>single-shot</strong> generation</p>
+                    <p style="margin-top: 12px; color: var(--text-muted); font-size: 0.9rem;">Focus: what you say</p>
+                    <p style="margin-top: 8px; color: var(--text-muted); font-size: 0.85rem;">Static, one-time</p>
+                </div>
+                <span class="vs">→</span>
+                <div class="comparison-box">
+                    <h4>Context Engineering</h4>
+                    <p>Manages <strong>multi-turn</strong> agent loops</p>
+                    <p style="margin-top: 12px; color: var(--text-muted); font-size: 0.9rem;">Focus: what the model sees</p>
+                    <p style="margin-top: 8px; color: var(--text-muted); font-size: 0.85rem;">Dynamic, iterative</p>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 32px;">
+                <p style="font-size: 1.05rem;">As agents operate over <strong>multiple turns</strong> and <strong>longer time horizons</strong>, we need strategies for managing what goes into the context window on <em>every</em> call.</p>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 7: Definition ==================== -->
+        <div class="slide" data-slide="7">
+            <p class="section-label">The Context Engine</p>
+            <h2>Context Engineering Defined</h2>
+            <div class="quote">
+                The art and science of curating what goes into the limited context window.
+                <div class="quote-author">— Anthropic</div>
+            </div>
+            <ul style="margin-top: 32px;">
+                <li>Designing a system that decides <strong>what to include</strong></li>
+                <li>Knowing <strong>what to exclude</strong> to preserve attention</li>
+                <li>Understanding <strong>when to compress</strong> information</li>
+                <li>Building <strong>retrieval systems</strong> for dynamic context</li>
+            </ul>
+        </div>
+
+        <!-- ==================== SLIDE 8: Context Engine Diagram ==================== -->
+        <div class="slide" data-slide="8">
+            <p class="section-label">The Context Engine</p>
+            <h2>The Context Engine</h2>
+            <p style="margin-bottom: 20px;">A system that curates relevant context and feeds the LLM only what it needs <em>right now</em>.</p>
+            <div class="diagram">
+                <svg width="850" height="280" viewBox="0 0 850 280">
+                    <rect class="box" x="20" y="20" width="90" height="40" rx="6"/>
+                    <text class="label-small" x="65" y="45">Memory</text>
+                    <rect class="box" x="20" y="70" width="90" height="40" rx="6"/>
+                    <text class="label-small" x="65" y="95">Tools</text>
+                    <rect class="box" x="20" y="120" width="90" height="40" rx="6"/>
+                    <text class="label-small" x="65" y="145">RAG</text>
+                    <rect class="box" x="20" y="170" width="90" height="40" rx="6"/>
+                    <text class="label-small" x="65" y="195">Plans</text>
+                    <rect class="box" x="20" y="220" width="90" height="40" rx="6"/>
+                    <text class="label-small" x="65" y="245">MCP</text>
+                    <path class="arrow arrow-animated" d="M 110 40 L 220 115"/>
+                    <path class="arrow arrow-animated" d="M 110 90 L 220 120"/>
+                    <path class="arrow arrow-animated" d="M 110 140 L 220 130"/>
+                    <path class="arrow arrow-animated" d="M 110 190 L 220 145"/>
+                    <path class="arrow arrow-animated" d="M 110 240 L 220 155"/>
+                    <rect class="box-highlight" x="230" y="80" width="200" height="110" rx="12"/>
+                    <text class="label" x="330" y="120">Context</text>
+                    <text class="label" x="330" y="140">Engine</text>
+                    <text class="label-small" x="330" y="165">curate · filter · compress</text>
+                    <path class="arrow arrow-animated" d="M 430 135 L 490 135"/>
+                    <rect class="box" x="500" y="70" width="160" height="130" rx="10"/>
+                    <text class="label" x="580" y="110">Context</text>
+                    <text class="label" x="580" y="130">Window</text>
+                    <text class="label-small" x="580" y="155">optimized tokens</text>
+                    <text class="label-small" x="580" y="175" style="fill: #4ade80">high signal</text>
+                    <path class="arrow arrow-animated" d="M 660 135 L 710 135"/>
+                    <rect class="box" x="720" y="95" width="100" height="80" rx="10"/>
+                    <text class="label" x="770" y="140">LLM</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 9: Building Blocks ==================== -->
+        <div class="slide" data-slide="9">
+            <p class="section-label">The Context Engine</p>
+            <h2>Building Blocks</h2>
+            <div class="grid">
+                <div>
+                    <h3>Context Sources</h3>
+                    <ul>
+                        <li>System prompts</li>
+                        <li>User prompts & history</li>
+                        <li>External data (docs, DBs, APIs)</li>
+                        <li>Memory files</li>
+                        <li>Planning files</li>
+                        <li>Tool outputs</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Sub-Engines</h3>
+                    <ul>
+                        <li><strong>RAG</strong> — semantic retrieval</li>
+                        <li><strong>Agentic Search</strong> — dynamic exploration</li>
+                        <li><strong>Virtual File Systems</strong> — navigation</li>
+                        <li><strong>MCP</strong> — protocol layer</li>
+                        <li><strong>Sub-agents</strong> — task delegation</li>
+                        <li><strong>Compaction</strong> — summarization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 10: Goldilocks Zone Interactive ==================== -->
+        <div class="slide" data-slide="10">
+            <p class="section-label">The Context Engine</p>
+            <h2>The Goldilocks Zone</h2>
+            <p style="margin-bottom: 24px;">System prompts should be at the <strong>right altitude</strong> — specific enough to guide behavior, flexible enough to adapt.</p>
+            <div class="scale-container">
+                <div class="scale-labels">
+                    <span>Too Rigid</span>
+                    <span style="color: var(--success);">Just Right</span>
+                    <span>Too Vague</span>
+                </div>
+                <div class="scale">
+                    <div class="scale-marker" id="altitudeMarker" style="left: 50%;"></div>
+                </div>
+                <div class="grid-3" style="margin-top: 24px; gap: 16px;">
+                    <div id="zone-rigid" style="text-align: center; transition: all 0.3s ease;">
+                        <p style="font-size: 0.85rem; color: var(--error);">Hardcoded if-else logic</p>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Brittle, high maintenance</p>
+                    </div>
+                    <div id="zone-right" style="text-align: center; transition: all 0.3s ease;">
+                        <p style="font-size: 0.85rem; color: var(--success);">Clear heuristics</p>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Strong guidance, flexible</p>
+                    </div>
+                    <div id="zone-vague" style="text-align: center; transition: all 0.3s ease;">
+                        <p style="font-size: 0.85rem; color: var(--error);">High-level platitudes</p>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">No concrete signals</p>
+                    </div>
+                </div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 12px;">Drag the marker to explore different altitudes</p>
+        </div>
+
+        <!-- ==================== SLIDE 11: System Prompts with Tabs ==================== -->
+        <div class="slide" data-slide="11">
+            <p class="section-label">System Prompts & Tools</p>
+            <h2>System Prompts Best Practices</h2>
+            <ul style="margin-bottom: 20px;">
+                <li>Be <strong>extremely clear</strong> with direct language</li>
+                <li>Organize into <strong>distinct sections</strong></li>
+                <li>Use XML tags or Markdown headers</li>
+            </ul>
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab(this, 'tab1')">XML Style</div>
+                <div class="tab" onclick="switchTab(this, 'tab2')">Markdown Style</div>
+                <div class="tab" onclick="switchTab(this, 'tab3')">Minimal</div>
+            </div>
+            <div id="tab1" class="tab-content active">
+                <div class="code-block code-block-small" data-lang="xml">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="tag">&lt;background_information&gt;</span>
+You are an AI agent that helps debug distributed systems.
+<span class="tag">&lt;/background_information&gt;</span>
+
+<span class="tag">&lt;instructions&gt;</span>
+Always reason step-by-step.
+Ask clarifying questions when needed.
+<span class="tag">&lt;/instructions&gt;</span>
+
+<span class="tag">&lt;output_format&gt;</span>
+- Provide concise bullet points
+- End with actionable recommendation
+<span class="tag">&lt;/output_format&gt;</span>
+                </div>
+            </div>
+            <div id="tab2" class="tab-content">
+                <div class="code-block code-block-small" data-lang="markdown">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="comment">## Background</span>
+You are an AI agent for debugging distributed systems.
+
+<span class="comment">## Instructions</span>
+1. Always reason step-by-step
+2. Ask clarifying questions when needed
+
+<span class="comment">## Output Format</span>
+- Concise bullet points
+- Actionable recommendations
+                </div>
+            </div>
+            <div id="tab3" class="tab-content">
+                <div class="code-block code-block-small" data-lang="text">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+You debug distributed systems.
+Think step-by-step. Ask questions if unclear.
+Give bullet points and recommendations.
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 12: What is a Tool ==================== -->
+        <div class="slide" data-slide="12">
+            <p class="section-label">System Prompts & Tools</p>
+            <h2>What is a Tool?</h2>
+            <p style="margin-bottom: 24px;">A new kind of software — a contract between <strong>deterministic systems</strong> and <strong>non-deterministic agents</strong>.</p>
+            <div class="comparison">
+                <div class="comparison-box">
+                    <h4>Traditional Software</h4>
+                    <p><code>getWeather("NYC")</code></p>
+                    <p style="margin-top: 12px; font-size: 0.9rem;">Same output every time</p>
+                    <p style="margin-top: 8px; color: var(--text-muted); font-size: 0.85rem;">Deterministic</p>
+                </div>
+                <span class="vs">≠</span>
+                <div class="comparison-box">
+                    <h4>Agent + Tool</h4>
+                    <p>"Should I bring an umbrella?"</p>
+                    <p style="margin-top: 12px; font-size: 0.9rem;">May call tool, ask questions, or answer directly</p>
+                    <p style="margin-top: 8px; color: var(--text-muted); font-size: 0.85rem;">Non-deterministic</p>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 24px;">
+                <p style="font-size: 0.95rem;"><strong>Goal:</strong> Increase the surface area over which agents can be effective using tools to pursue successful strategies.</p>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 13: Tool Design Principles ==================== -->
+        <div class="slide" data-slide="13">
+            <p class="section-label">System Prompts & Tools</p>
+            <h2>Tool Design Principles</h2>
+            <div class="grid-3">
+                <div class="card card-compact">
+                    <h4>Namespacing</h4>
+                    <p>Group tools with clear prefixes: <code>asana_search</code>, <code>jira_search</code></p>
+                </div>
+                <div class="card card-compact">
+                    <h4>Minimal Overlap</h4>
+                    <p>If a human can't decide which tool, neither can the agent</p>
+                </div>
+                <div class="card card-compact">
+                    <h4>Token Efficiency</h4>
+                    <p>Return only high-signal information back to agents</p>
+                </div>
+                <div class="card card-compact">
+                    <h4>Clear Descriptions</h4>
+                    <p>Think: how would you explain this to a new hire?</p>
+                </div>
+                <div class="card card-compact">
+                    <h4>Robust Errors</h4>
+                    <p>Helpful messages, not opaque codes or tracebacks</p>
+                </div>
+                <div class="card card-compact">
+                    <h4>Observable</h4>
+                    <p>Logs, metrics, and validation at every step</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 14: Choosing Tools ==================== -->
+        <div class="slide" data-slide="14">
+            <p class="section-label">System Prompts & Tools</p>
+            <h2>Choosing the Right Tools</h2>
+            <p style="margin-bottom: 20px;">More tools don't always lead to better outcomes. Build for <strong>high-impact workflows</strong>.</p>
+            <div class="grid">
+                <div>
+                    <div class="code-label" style="color: var(--error);">Instead of...</div>
+                    <div class="code-block code-block-small" data-lang="tools">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="function">list_users()</span>
+<span class="function">list_events()</span>
+<span class="function">create_event()</span>
+<span class="function">list_contacts()</span>
+<span class="function">read_logs()</span>
+<span class="function">get_customer_by_id()</span>
+<span class="function">list_transactions()</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="code-label" style="color: var(--success);">Build these...</div>
+                    <div class="code-block code-block-small" data-lang="tools">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="function">schedule_event()</span>
+<span class="comment">// Finds availability + schedules</span>
+
+<span class="function">search_contacts()</span>
+<span class="comment">// Direct lookup, not brute force</span>
+
+<span class="function">search_logs()</span>
+<span class="comment">// Returns relevant lines + context</span>
+
+<span class="function">get_customer_context()</span>
+<span class="comment">// Compiles all relevant info</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 15: Tool Response Optimization ==================== -->
+        <div class="slide" data-slide="15">
+            <p class="section-label">System Prompts & Tools</p>
+            <h2>Tool Response Optimization</h2>
+            <p style="margin-bottom: 16px;">Use <code>response_format</code> to control verbosity and save tokens.</p>
+            <div class="code-compare">
+                <div>
+                    <div class="code-label">Detailed (206 tokens)</div>
+                    <div class="code-block code-block-small" data-lang="json">
+{
+  <span class="string">"thread_ts"</span>: <span class="string">"1234567890.123456"</span>,
+  <span class="string">"channel_id"</span>: <span class="string">"C0123ABCD"</span>,
+  <span class="string">"user_id"</span>: <span class="string">"U0123WXYZ"</span>,
+  <span class="string">"user_name"</span>: <span class="string">"jane.doe"</span>,
+  <span class="string">"message"</span>: <span class="string">"Meeting at 3pm"</span>,
+  <span class="string">"timestamp"</span>: <span class="string">"2025-01-15"</span>,
+  <span class="string">"reactions"</span>: [<span class="string">"thumbsup"</span>]
+}
+                    </div>
+                </div>
+                <div>
+                    <div class="code-label">Concise (72 tokens) — 65% savings!</div>
+                    <div class="code-block code-block-small" data-lang="json">
+{
+  <span class="string">"content"</span>: <span class="string">"Meeting at 3pm"</span>,
+  <span class="string">"author"</span>: <span class="string">"jane.doe"</span>,
+  <span class="string">"date"</span>: <span class="string">"2025-01-15"</span>
+}
+                    </div>
+                </div>
+            </div>
+            <div class="grid-3" style="margin-top: 20px;">
+                <div class="metric-box">
+                    <div class="metric-value" style="color: var(--error);">206</div>
+                    <div class="metric-label">Detailed tokens</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value" style="color: var(--success);">72</div>
+                    <div class="metric-label">Concise tokens</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value" style="color: var(--info);">65%</div>
+                    <div class="metric-label">Tokens saved</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 16: RAG & Search ==================== -->
+        <div class="slide" data-slide="16">
+            <p class="section-label">Retrieval & Search</p>
+            <h2>RAG & Agentic Search</h2>
+            <div class="grid">
+                <div>
+                    <ul>
+                        <li><strong>Vector search</strong> — semantic similarity</li>
+                        <li><strong>Hybrid search</strong> — vector + keyword</li>
+                        <li><strong>Metadata filtering</strong> — precise targeting</li>
+                    </ul>
+                    <div class="highlight-box" style="margin-top: 20px;">
+                        <p style="font-size: 0.95rem;"><strong>Key insight:</strong> The real challenge is building good search, not embeddings.</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="code-block code-block-small" data-lang="python">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="variable">query</span> = <span class="string">"How does compaction work?"</span>
+
+<span class="comment"># Retrieve just enough</span>
+<span class="variable">docs</span> = <span class="variable">vector_db</span>.<span class="function">search</span>(
+    <span class="variable">query</span>, 
+    <span class="variable">top_k</span>=<span class="number">5</span>
+)
+
+<span class="variable">context</span> = <span class="string">"\n"</span>.<span class="function">join</span>([
+    <span class="variable">doc</span>.<span class="variable">text</span> <span class="keyword">for</span> <span class="variable">doc</span> <span class="keyword">in</span> <span class="variable">docs</span>
+])
+
+<span class="comment"># Don't overload the window</span>
+<span class="variable">prompt</span> = <span class="string">f"""
+Answer using this context:
+{context}
+"""</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 17: Just-in-Time Context ==================== -->
+        <div class="slide" data-slide="17">
+            <p class="section-label">Retrieval & Search</p>
+            <h2>Just-in-Time Context</h2>
+            <p style="margin-bottom: 20px;">Instead of pre-loading everything, maintain <strong>lightweight references</strong> and load dynamically.</p>
+            <div class="diagram">
+                <svg width="800" height="200" viewBox="0 0 800 200">
+                    <rect class="box" x="30" y="70" width="140" height="60" rx="8"/>
+                    <text class="label" x="100" y="95">References</text>
+                    <text class="label-small" x="100" y="115">file paths, queries, links</text>
+                    <path class="arrow arrow-animated" d="M 170 100 L 240 100"/>
+                    <rect class="box-highlight" x="250" y="50" width="140" height="100" rx="10"/>
+                    <text class="label" x="320" y="90">Agent</text>
+                    <text class="label-small" x="320" y="110">explores</text>
+                    <text class="label-small" x="320" y="125">on-demand</text>
+                    <path class="arrow arrow-animated" d="M 390 80 L 450 50"/>
+                    <path class="arrow arrow-animated" d="M 390 100 L 450 100"/>
+                    <path class="arrow arrow-animated" d="M 390 120 L 450 150"/>
+                    <rect class="box" x="460" y="20" width="100" height="40" rx="6"/>
+                    <text class="label-small" x="510" y="45">glob</text>
+                    <rect class="box" x="460" y="80" width="100" height="40" rx="6"/>
+                    <text class="label-small" x="510" y="105">grep</text>
+                    <rect class="box" x="460" y="140" width="100" height="40" rx="6"/>
+                    <text class="label-small" x="510" y="165">head/tail</text>
+                    <path class="arrow arrow-animated" d="M 560 100 L 620 100"/>
+                    <rect class="box" x="630" y="70" width="140" height="60" rx="8"/>
+                    <text class="label" x="700" y="95">Focused</text>
+                    <text class="label-small" x="700" y="115">Context</text>
+                </svg>
+            </div>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 16px;"><strong>Example:</strong> Claude Code uses <code>glob</code> and <code>grep</code> to navigate codebases without loading entire file trees.</p>
+        </div>
+
+        <!-- ==================== SLIDE 18: Progressive Disclosure ==================== -->
+        <div class="slide" data-slide="18">
+            <p class="section-label">Retrieval & Search</p>
+            <h2>Progressive Disclosure</h2>
+            <p style="margin-bottom: 20px;">Agents can discover context layer by layer, using metadata as signals.</p>
+            <div class="grid">
+                <div>
+                    <ul>
+                        <li><strong>File names</strong> hint at purpose</li>
+                        <li><strong>Folder structure</strong> implies organization</li>
+                        <li><strong>Timestamps</strong> suggest relevance</li>
+                        <li><strong>File sizes</strong> indicate complexity</li>
+                    </ul>
+                    <div class="highlight-box" style="margin-top: 20px;">
+                        <p style="font-size: 0.9rem;">Like humans: we don't memorize corpuses, we use indexes and bookmarks.</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="code-block code-block-small" data-lang="filesystem">
+<span class="comment"># Different signals from location</span>
+
+<span class="variable">tests/</span>
+  └── <span class="function">test_utils.py</span>
+      <span class="comment">→ testing utilities</span>
+
+<span class="variable">src/core_logic/</span>
+  └── <span class="function">test_utils.py</span>
+      <span class="comment">→ core test helpers</span>
+
+<span class="comment"># Same name, different context!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 19: Memory & Compaction ==================== -->
+        <div class="slide" data-slide="19">
+            <p class="section-label">Long-Horizon Tasks</p>
+            <h2>Memory & Compaction</h2>
+            <p style="margin-bottom: 20px;"><strong>Compaction</strong> = summarizing a conversation near context limits, then restarting with clean window + summary.</p>
+            <div class="diagram">
+                <svg width="750" height="180" viewBox="0 0 750 180">
+                    <rect class="box" x="30" y="30" width="200" height="120" rx="10"/>
+                    <text class="label-small" x="130" y="55">Full Context</text>
+                    <rect x="45" y="65" width="170" height="12" rx="2" fill="#525252"/>
+                    <rect x="45" y="82" width="170" height="12" rx="2" fill="#525252"/>
+                    <rect x="45" y="99" width="170" height="12" rx="2" fill="#525252"/>
+                    <rect x="45" y="116" width="170" height="12" rx="2" fill="#f87171" opacity="0.5"/>
+                    <text class="label-small" x="130" y="143" style="fill: #f87171">approaching limit</text>
+                    <path class="arrow arrow-animated" d="M 240 90 L 320 90"/>
+                    <text class="label-small" x="280" y="80">compact</text>
+                    <rect class="box-highlight" x="340" y="50" width="160" height="80" rx="10"/>
+                    <text class="label-small" x="420" y="75">Summary</text>
+                    <rect x="355" y="85" width="130" height="12" rx="2" fill="#4ade80"/>
+                    <rect x="355" y="102" width="90" height="12" rx="2" fill="#4ade80"/>
+                    <text class="label-small" x="420" y="140" style="fill: #4ade80">high fidelity</text>
+                    <text class="label" x="530" y="95">+</text>
+                    <rect class="box" x="560" y="60" width="140" height="60" rx="8"/>
+                    <text class="label-small" x="630" y="85">Recent Files</text>
+                    <text class="label-small" x="630" y="102">(last 5)</text>
+                </svg>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 12px;"><strong>Key:</strong> Maximize recall first, then iterate to improve precision by eliminating superfluous content.</p>
+        </div>
+
+        <!-- ==================== SLIDE 20: Structured Note-Taking ==================== -->
+        <div class="slide" data-slide="20">
+            <p class="section-label">Long-Horizon Tasks</p>
+            <h2>Structured Note-Taking</h2>
+            <p style="margin-bottom: 16px;">Agents persist notes to memory outside the context window, pulling them back when needed.</p>
+            <div class="grid">
+                <div>
+                    <div class="code-block code-block-small" data-lang="memory.md">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="comment"># memory.md</span>
+
+<span class="keyword">## User Preferences</span>
+- Prefers concise technical explanations
+- Uses FastAPI + Postgres stack
+- Timezone: UTC+2
+
+<span class="keyword">## Decisions Made</span>
+- Use RAG instead of fine-tuning
+- JWT tokens with 24h expiry
+- Deploy to AWS ECS
+
+<span class="keyword">## Key Facts</span>
+- Project started: 2025-01-10
+- Main contact: jane@company.com
+                    </div>
+                </div>
+                <div>
+                    <div class="code-block code-block-small" data-lang="plan.md">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="comment"># plan.md</span>
+
+<span class="keyword">## Current Goal</span>
+Implement user authentication
+
+<span class="keyword">## Progress</span>
+<span class="string">✓</span> Database schema design
+<span class="string">✓</span> User model created
+<span class="function">◯</span> JWT middleware  <span class="comment">← current</span>
+◯ Login endpoint
+◯ Registration flow
+◯ Password reset
+
+<span class="keyword">## Blockers</span>
+- Waiting on security review
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 21: Sub-Agent Architecture ==================== -->
+        <div class="slide" data-slide="21">
+            <p class="section-label">Long-Horizon Tasks</p>
+            <h2>Sub-Agent Architecture</h2>
+            <p style="margin-bottom: 20px;">Specialized sub-agents handle focused tasks with <strong>clean context windows</strong>, returning condensed summaries.</p>
+            <div class="diagram">
+                <svg width="700" height="240" viewBox="0 0 700 240">
+                    <rect class="box-highlight" x="250" y="20" width="180" height="70" rx="10"/>
+                    <text class="label" x="340" y="50">Lead Agent</text>
+                    <text class="label-small" x="340" y="70">coordinates + synthesizes</text>
+                    <path class="arrow" d="M 280 90 L 120 140"/>
+                    <path class="arrow" d="M 340 90 L 340 140"/>
+                    <path class="arrow" d="M 400 90 L 560 140"/>
+                    <rect class="box" x="50" y="145" width="140" height="70" rx="8"/>
+                    <text class="label-small" x="120" y="170">Research Agent</text>
+                    <text class="label-small" x="120" y="188" style="fill: #737373">deep exploration</text>
+                    <rect class="box" x="270" y="145" width="140" height="70" rx="8"/>
+                    <text class="label-small" x="340" y="170">Code Agent</text>
+                    <text class="label-small" x="340" y="188" style="fill: #737373">implementation</text>
+                    <rect class="box" x="490" y="145" width="140" height="70" rx="8"/>
+                    <text class="label-small" x="560" y="170">Verifier Agent</text>
+                    <text class="label-small" x="560" y="188" style="fill: #737373">validation</text>
+                    <text class="label-small" x="120" y="230" style="fill: #4ade80">→ 1-2k token summary</text>
+                    <text class="label-small" x="340" y="230" style="fill: #4ade80">→ 1-2k token summary</text>
+                    <text class="label-small" x="560" y="230" style="fill: #4ade80">→ 1-2k token summary</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 22: Strategy Comparison ==================== -->
+        <div class="slide" data-slide="22">
+            <p class="section-label">Long-Horizon Tasks</p>
+            <h2>Choosing Your Strategy</h2>
+            <div class="grid-3" style="margin-top: 24px;">
+                <div class="card">
+                    <h4>Compaction</h4>
+                    <p style="margin-bottom: 12px;">Summarize and restart</p>
+                    <p style="font-size: 0.8rem; color: var(--success);">Best for:</p>
+                    <p style="font-size: 0.8rem;">Tasks with extensive back-and-forth conversation</p>
+                </div>
+                <div class="card">
+                    <h4>Note-Taking</h4>
+                    <p style="margin-bottom: 12px;">Persist to external files</p>
+                    <p style="font-size: 0.8rem; color: var(--success);">Best for:</p>
+                    <p style="font-size: 0.8rem;">Iterative development with clear milestones</p>
+                </div>
+                <div class="card">
+                    <h4>Multi-Agent</h4>
+                    <p style="margin-bottom: 12px;">Delegate to specialists</p>
+                    <p style="font-size: 0.8rem; color: var(--success);">Best for:</p>
+                    <p style="font-size: 0.8rem;">Complex research where parallel exploration pays</p>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 24px;">
+                <p style="font-size: 0.95rem;"><strong>Real Example:</strong> Claude playing Pokémon maintains tallies across thousands of game steps, maps, strategies — all persisted to notes and read back after context resets.</p>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 23: Why Fine-Tune ==================== -->
+        <div class="slide" data-slide="23">
+            <p class="section-label">Fine-Tuning for Tools</p>
+            <h2>Why Fine-Tune for Tool Calling?</h2>
+            <p style="margin-bottom: 20px;">Models know <strong>syntax</strong> (how to call), but may lack <strong>intent</strong> (when and why).</p>
+            <div class="grid-2" style="gap: 16px;">
+                <div class="card card-compact">
+                    <h4>Model Distillation</h4>
+                    <p>Generate synthetic data with large model, fine-tune smaller model to replicate</p>
+                </div>
+                <div class="card card-compact">
+                    <h4>Non-Standard Schemas</h4>
+                    <p>Handle legacy, complex, or proprietary formats not in training data</p>
+                </div>
+                <div class="card card-compact">
+                    <h4>Optimize Context</h4>
+                    <p>"Bake" tool definitions into weights, use shorthand in prompts</p>
+                </div>
+                <div class="card card-compact">
+                    <h4>Selection Ambiguity</h4>
+                    <p>Bias toward enterprise policies (internal KB over external search)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 24: FunctionGemma Setup ==================== -->
+        <div class="slide" data-slide="24">
+            <p class="section-label">Fine-Tuning for Tools</p>
+            <h2>FunctionGemma Setup</h2>
+            <div class="grid">
+                <div>
+                    <ul>
+                        <li>Install Hugging Face TRL & transformers</li>
+                        <li>Load model and tokenizer</li>
+                        <li>Accept license on HuggingFace Hub</li>
+                    </ul>
+                    <div class="tags" style="margin-top: 20px;">
+                        <span class="tag">torch</span>
+                        <span class="tag">transformers</span>
+                        <span class="tag">trl</span>
+                        <span class="tag">datasets</span>
+                        <span class="tag">accelerate</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="code-block code-block-small" data-lang="python">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="keyword">from</span> transformers <span class="keyword">import</span> (
+    AutoTokenizer, 
+    AutoModelForCausalLM
+)
+
+<span class="variable">model</span> = <span class="function">AutoModelForCausalLM</span>.<span class="function">from_pretrained</span>(
+    <span class="string">"google/functiongemma-270m-it"</span>,
+    <span class="variable">dtype</span>=<span class="string">"auto"</span>,
+    <span class="variable">device_map</span>=<span class="string">"auto"</span>,
+    <span class="variable">attn_implementation</span>=<span class="string">"eager"</span>
+)
+
+<span class="variable">tokenizer</span> = <span class="function">AutoTokenizer</span>.<span class="function">from_pretrained</span>(
+    <span class="string">"google/functiongemma-270m-it"</span>
+)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 25: Dataset Preparation ==================== -->
+        <div class="slide" data-slide="25">
+            <p class="section-label">Fine-Tuning for Tools</p>
+            <h2>Dataset Preparation</h2>
+            <p style="margin-bottom: 16px;">Define tools and create conversation format with expected outputs.</p>
+            <div class="grid">
+                <div>
+                    <div class="code-block code-block-small" data-lang="python">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="comment"># Tool definitions</span>
+<span class="keyword">def</span> <span class="function">search_knowledge_base</span>(<span class="variable">query</span>: <span class="variable">str</span>):
+    <span class="string">"""Search internal company docs"""</span>
+    <span class="keyword">return</span> <span class="string">"Internal Result"</span>
+
+<span class="keyword">def</span> <span class="function">search_google</span>(<span class="variable">query</span>: <span class="variable">str</span>):
+    <span class="string">"""Search public information"""</span>
+    <span class="keyword">return</span> <span class="string">"Public Result"</span>
+
+<span class="variable">TOOLS</span> = [
+    <span class="function">get_json_schema</span>(<span class="variable">search_knowledge_base</span>),
+    <span class="function">get_json_schema</span>(<span class="variable">search_google</span>)
+]
+                    </div>
+                </div>
+                <div>
+                    <div class="code-block code-block-small" data-lang="json">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+{
+  <span class="string">"messages"</span>: [
+    {<span class="string">"role"</span>: <span class="string">"developer"</span>, 
+     <span class="string">"content"</span>: <span class="string">"You can call..."</span>},
+    {<span class="string">"role"</span>: <span class="string">"user"</span>, 
+     <span class="string">"content"</span>: <span class="string">"What is our 
+     Slack retention policy?"</span>},
+    {<span class="string">"role"</span>: <span class="string">"assistant"</span>,
+     <span class="string">"tool_calls"</span>: [{
+       <span class="string">"function"</span>: {
+         <span class="string">"name"</span>: <span class="string">"search_knowledge_base"</span>,
+         <span class="string">"arguments"</span>: {<span class="string">"query"</span>: <span class="string">"..."</span>}
+       }
+     }]}
+  ]
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 26: Training Config ==================== -->
+        <div class="slide" data-slide="26">
+            <p class="section-label">Fine-Tuning for Tools</p>
+            <h2>Training with SFTTrainer</h2>
+            <div class="grid">
+                <div>
+                    <div class="code-block code-block-small" data-lang="python">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="keyword">from</span> trl <span class="keyword">import</span> SFTConfig, SFTTrainer
+
+<span class="variable">args</span> = <span class="function">SFTConfig</span>(
+    <span class="variable">output_dir</span>=<span class="string">"./checkpoints"</span>,
+    <span class="variable">max_length</span>=<span class="number">512</span>,
+    <span class="variable">num_train_epochs</span>=<span class="number">8</span>,
+    <span class="variable">per_device_train_batch_size</span>=<span class="number">4</span>,
+    <span class="variable">learning_rate</span>=<span class="number">5e-5</span>,
+    <span class="variable">lr_scheduler_type</span>=<span class="string">"constant"</span>,
+    <span class="variable">eval_strategy</span>=<span class="string">"epoch"</span>,
+    <span class="variable">bf16</span>=<span class="keyword">True</span>,
+)
+
+<span class="variable">trainer</span> = <span class="function">SFTTrainer</span>(
+    <span class="variable">model</span>=<span class="variable">model</span>,
+    <span class="variable">args</span>=<span class="variable">args</span>,
+    <span class="variable">train_dataset</span>=<span class="variable">dataset</span>[<span class="string">'train'</span>],
+    <span class="variable">eval_dataset</span>=<span class="variable">dataset</span>[<span class="string">'test'</span>],
+)
+
+<span class="variable">trainer</span>.<span class="function">train</span>()
+                    </div>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 16px;">Key Parameters</h4>
+                    <ul style="font-size: 1rem;">
+                        <li><code>num_train_epochs</code>: 8 passes</li>
+                        <li><code>learning_rate</code>: 5e-5</li>
+                        <li><code>max_length</code>: 512 tokens</li>
+                        <li><code>bf16</code>: bfloat16 precision</li>
+                    </ul>
+                    <div class="diagram" style="margin-top: 20px;">
+                        <svg width="280" height="120" viewBox="0 0 280 120">
+                            <line x1="40" y1="100" x2="260" y2="100" stroke="#525252" stroke-width="2"/>
+                            <line x1="40" y1="100" x2="40" y2="20" stroke="#525252" stroke-width="2"/>
+                            <text x="150" y="115" class="label-small">Epochs</text>
+                            <text x="20" y="60" class="label-small" transform="rotate(-90, 20, 60)">Loss</text>
+                            <path d="M 40 30 Q 80 40, 120 55 T 200 80 T 260 90" stroke="#4ade80" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 27: Before vs After with Animation ==================== -->
+        <div class="slide" data-slide="27">
+            <p class="section-label">Fine-Tuning for Tools</p>
+            <h2>Before vs After Fine-Tuning</h2>
+            <p style="margin-bottom: 24px;">Tool selection accuracy on held-out test set:</p>
+            <div class="grid">
+                <div class="highlight-box" style="text-align: center;">
+                    <p class="stat-value error" id="beforeCounter">0</p>
+                    <p class="stat-label">Before Fine-Tuning (out of 20)</p>
+                    <div class="progress-bar" style="margin-top: 16px;">
+                        <div id="beforeBar" class="progress-fill error" style="width: 0%;"></div>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 12px;">Model refused calls or hallucinated</p>
+                </div>
+                <div class="highlight-box" style="text-align: center;">
+                    <p class="stat-value success" id="afterCounter">0</p>
+                    <p class="stat-label">After Fine-Tuning (out of 20)</p>
+                    <div class="progress-bar" style="margin-top: 16px;">
+                        <div id="afterBar" class="progress-fill success" style="width: 0%;"></div>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 12px;">Correctly distinguishes KB vs search</p>
+                </div>
+            </div>
+            <div class="code-block code-block-small" data-lang="output" style="margin-top: 20px; max-width: 600px;">
+<span class="comment"># After training:</span>
+Prompt: <span class="string">"What is our Slack retention policy?"</span>
+Output: <span class="function">search_knowledge_base</span>{query: <span class="string">"slack retention policy"</span>}
+<span class="string">✓ correct!</span>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 28: Key Takeaways ==================== -->
+        <div class="slide" data-slide="28">
+            <p class="section-label">Summary</p>
+            <h2>Key Takeaways</h2>
+            <div class="grid-2" style="gap: 20px;">
+                <div class="card">
+                    <h4>1. Context is Finite</h4>
+                    <p>Treat attention budget as a precious resource with diminishing returns</p>
+                </div>
+                <div class="card">
+                    <h4>2. Build a Context Engine</h4>
+                    <p>Curate, filter, and compress information dynamically</p>
+                </div>
+                <div class="card">
+                    <h4>3. Design Tools for Agents</h4>
+                    <p>Namespace, minimize overlap, optimize responses</p>
+                </div>
+                <div class="card">
+                    <h4>4. Retrieve Just-in-Time</h4>
+                    <p>Load context on demand, use progressive disclosure</p>
+                </div>
+                <div class="card">
+                    <h4>5. Manage Long Tasks</h4>
+                    <p>Compaction, note-taking, and sub-agent delegation</p>
+                </div>
+                <div class="card">
+                    <h4>6. Fine-Tune When Needed</h4>
+                    <p>Bake tool knowledge into model weights for specific use cases</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 29: Big Picture ==================== -->
+        <div class="slide" data-slide="29">
+            <p class="section-label">Conclusion</p>
+            <h2>The Big Picture</h2>
+            <div class="comparison" style="margin-top: 16px;">
+                <div class="comparison-box">
+                    <h4>Prompt Engineering</h4>
+                    <p><em>What you say</em></p>
+                </div>
+                <span class="vs">≠</span>
+                <div class="comparison-box">
+                    <h4>Context Engineering</h4>
+                    <p><em>What the model sees</em></p>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 28px;">
+                <h4 style="margin-bottom: 16px;">Modern Agents Live or Die By:</h4>
+                <div class="grid-4">
+                    <div class="card card-compact" style="text-align: center;">
+                        <h4>Context Quality</h4>
+                        <p>High signal tokens</p>
+                    </div>
+                    <div class="card card-compact" style="text-align: center;">
+                        <h4>Retrieval Accuracy</h4>
+                        <p>Right info, right time</p>
+                    </div>
+                    <div class="card card-compact" style="text-align: center;">
+                        <h4>Memory Mgmt</h4>
+                        <p>Persistence & recall</p>
+                    </div>
+                    <div class="card card-compact" style="text-align: center;">
+                        <h4>Compaction</h4>
+                        <p>Intelligent compression</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 30: Closing ==================== -->
+        <div class="slide title-slide" data-slide="30">
+            <p class="section-label">The Future of AI Agents</p>
+            <h1 style="font-size: 2.8rem; line-height: 1.3;">The future isn't bigger prompts</h1>
+            <p class="subtitle" style="font-size: 2.2rem; color: var(--highlight); margin-top: 20px;">It's better context.</p>
+            <div style="margin-top: 48px;">
+                <p class="author">Thank You</p>
+                <p style="font-size: 1rem; color: var(--text-muted); margin-top: 12px;">Tinevimbo</p>
+            </div>
+            <div style="margin-top: 32px;">
+                <span class="tag">Questions?</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <button class="nav-btn tooltip" data-tooltip="Previous (←)" id="prevBtn" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+            </svg>
+        </button>
+        <div class="progress" id="progress"></div>
+        <button class="nav-btn tooltip" data-tooltip="Next (→)" id="nextBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"/>
+            </svg>
+        </button>
+        <span class="slide-counter"><span id="currentSlide">1</span>/<span id="totalSlides">30</span></span>
+    </nav>
+
+    <div class="keyboard-hint">
+        <span class="key">←</span><span class="key">→</span> nav
+        <span class="key">O</span> overview
+        <span class="key">F</span> fullscreen
+    </div>
+
+    <script>
+        // Create particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Timer
+        let startTime = Date.now();
+        const timerEl = document.getElementById('timer');
+        setInterval(() => {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const secs = (elapsed % 60).toString().padStart(2, '0');
+            timerEl.textContent = `${mins}:${secs}`;
+        }, 1000);
+
+        // Slides
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 1;
+        let overviewMode = false;
+
+        const progress = document.getElementById('progress');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentSlideEl = document.getElementById('currentSlide');
+        const totalSlidesEl = document.getElementById('totalSlides');
+
+        // Create progress dots
+        for (let i = 1; i <= totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'progress-dot' + (i === 1 ? ' active' : '');
+            dot.dataset.slide = i;
+            dot.addEventListener('click', () => goToSlide(i));
+            progress.appendChild(dot);
+        }
+
+        totalSlidesEl.textContent = totalSlides;
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                const slideNum = index + 1;
+                slide.classList.remove('active', 'prev');
+                if (slideNum === currentSlide) {
+                    slide.classList.add('active');
+                    // Trigger animations for specific slides
+                    if (slideNum === 27) {
+                        animateCounters();
+                    }
+                } else if (slideNum < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            document.querySelectorAll('.progress-dot').forEach(dot => {
+                dot.classList.toggle('active', parseInt(dot.dataset.slide) === currentSlide);
+            });
+
+            currentSlideEl.textContent = currentSlide;
+            prevBtn.disabled = currentSlide === 1;
+            nextBtn.disabled = currentSlide === totalSlides;
+        }
+
+        function goToSlide(n) {
+            if (n >= 1 && n <= totalSlides) {
+                currentSlide = n;
+                updateSlide();
+                if (overviewMode) toggleOverview();
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function toggleOverview() {
+            overviewMode = !overviewMode;
+            document.getElementById('presentation').classList.toggle('overview-mode', overviewMode);
+            if (overviewMode) {
+                slides.forEach((slide, index) => {
+                    slide.style.opacity = '1';
+                    slide.style.transform = 'none';
+                    slide.style.pointerEvents = 'all';
+                    slide.onclick = () => goToSlide(index + 1);
+                });
+            } else {
+                slides.forEach(slide => {
+                    slide.style.opacity = '';
+                    slide.style.transform = '';
+                    slide.style.pointerEvents = '';
+                    slide.onclick = null;
+                });
+                updateSlide();
+            }
+        }
+
+        // Animated counters for slide 27
+        function animateCounters() {
+            const beforeCounter = document.getElementById('beforeCounter');
+            const afterCounter = document.getElementById('afterCounter');
+            const beforeBar = document.getElementById('beforeBar');
+            const afterBar = document.getElementById('afterBar');
+            
+            if (!beforeCounter || !afterCounter) return;
+            
+            let before = 0;
+            let after = 0;
+            
+            const beforeInterval = setInterval(() => {
+                if (before < 2) {
+                    before++;
+                    beforeCounter.textContent = before;
+                    beforeBar.style.width = (before * 5) + '%';
+                } else {
+                    clearInterval(beforeInterval);
+                }
+            }, 300);
+            
+            const afterInterval = setInterval(() => {
+                if (after < 16) {
+                    after++;
+                    afterCounter.textContent = after;
+                    afterBar.style.width = (after * 5) + '%';
+                } else {
+                    clearInterval(afterInterval);
+                }
+            }, 100);
+        }
+
+        // Event listeners
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (!overviewMode) nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (!overviewMode) prevSlide();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                goToSlide(1);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                goToSlide(totalSlides);
+            } else if (e.key === 'o' || e.key === 'O') {
+                e.preventDefault();
+                toggleOverview();
+            }
+        });
+
+        // Touch support
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50 && !overviewMode) {
+                if (diff > 0) nextSlide();
+                else prevSlide();
+            }
+        });
+
+        // Copy code functionality
+        function copyCode(btn) {
+            const codeBlock = btn.parentElement;
+            const code = codeBlock.textContent.replace('Copy', '').trim();
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Tab switching
+        function switchTab(tabEl, tabId) {
+            const parent = tabEl.parentElement.parentElement;
+            parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            parent.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            tabEl.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Token slider demo
+        const tokenSlider = document.getElementById('tokenSlider');
+        const tokenCount = document.getElementById('tokenCount');
+        const recallBar = document.getElementById('recallBar');
+        const recallLabel = document.getElementById('recallLabel');
+        
+        if (tokenSlider) {
+            tokenSlider.addEventListener('input', (e) => {
+                const val = e.target.value;
+                tokenCount.textContent = val + 'K';
+                
+                // Calculate recall (inverse relationship)
+                let recall;
+                if (val < 30) recall = 95 - (val * 0.3);
+                else if (val < 60) recall = 86 - ((val - 30) * 0.8);
+                else recall = 62 - ((val - 60) * 1.2);
+                recall = Math.max(10, Math.min(95, recall));
+                
+                recallBar.style.width = recall + '%';
+                recallLabel.textContent = 'Recall: ' + Math.round(recall) + '%';
+                
+                // Change color based on recall
+                if (recall > 70) {
+                    recallBar.className = 'progress-fill success';
+                    recallLabel.style.color = 'var(--success)';
+                } else if (recall > 40) {
+                    recallBar.className = 'progress-fill';
+                    recallBar.style.background = 'var(--warning)';
+                    recallLabel.style.color = 'var(--warning)';
+                } else {
+                    recallBar.className = 'progress-fill error';
+                    recallLabel.style.color = 'var(--error)';
+                }
+            });
+        }
+
+        // Draggable altitude marker
+        const altitudeMarker = document.getElementById('altitudeMarker');
+        if (altitudeMarker) {
+            let isDragging = false;
+            const scale = altitudeMarker.parentElement;
+            
+            altitudeMarker.addEventListener('mousedown', () => isDragging = true);
+            document.addEventListener('mouseup', () => isDragging = false);
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const rect = scale.getBoundingClientRect();
+                let x = (e.clientX - rect.left) / rect.width * 100;
+                x = Math.max(5, Math.min(95, x));
+                altitudeMarker.style.left = x + '%';
+                
+                // Update zone highlights
+                const rigid = document.getElementById('zone-rigid');
+                const right = document.getElementById('zone-right');
+                const vague = document.getElementById('zone-vague');
+                
+                if (rigid && right && vague) {
+                    rigid.style.opacity = x < 35 ? '1' : '0.4';
+                    right.style.opacity = (x >= 35 && x <= 65) ? '1' : '0.4';
+                    vague.style.opacity = x > 65 ? '1' : '0.4';
+                }
+            });
+        }
+
+        // Fullscreen toggle
+        function toggleFullscreen() {
+            const icon = document.getElementById('fullscreenIcon');
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().then(() => {
+                    // Change to exit fullscreen icon
+                    icon.innerHTML = '<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>';
+                }).catch(err => {
+                    console.log('Fullscreen error:', err);
+                });
+            } else {
+                document.exitFullscreen().then(() => {
+                    // Change back to enter fullscreen icon
+                    icon.innerHTML = '<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>';
+                });
+            }
+        }
+
+        // Listen for fullscreen change to update icon
+        document.addEventListener('fullscreenchange', () => {
+            const icon = document.getElementById('fullscreenIcon');
+            if (document.fullscreenElement) {
+                icon.innerHTML = '<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>';
+            } else {
+                icon.innerHTML = '<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>';
+            }
+        });
+
+        // F key for fullscreen
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f' || e.key === 'F') {
+                if (!e.target.matches('input, textarea')) {
+                    e.preventDefault();
+                    toggleFullscreen();
+                }
+            }
+        });
+
+        updateSlide();
+    </script>
+</body>
+</html>
