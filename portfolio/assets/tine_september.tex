@@ -1,0 +1,244 @@
+%-------------------------
+% Resume in Latex
+% Author : Jake Gutierrez
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape Tinevimbo Musingadi} \\ \vspace{1pt}
+    \small Mabvuku, Harare, Zimbabwe $|$ \href{mailto:tinevimbomusingadi1@gmail.com}{\underline{tinevimbomusingadi1@gmail.com}} $|$ 
+    \href{https://linkedin.com/in/...}{\underline{LinkedIn}} $|$
+    \href{https://github.com/...}{\underline{GitHub}}
+\end{center}
+
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Harare Institute of Technology}{Harare, Zimbabwe}
+      {Bachelor of Technology in Information Security and Assurance}{Aug. 2025 -- May 2029 (Expected)}
+      \resumeItemListStart
+        \resumeItem{Relevant Coursework: Operating Systems, Computer Networks, Cryptography, Number Theory, Machine Learning, Data Structures \& Algorithms, Linear Algebra, Probability \& Statistics, Discrete Math}
+      \resumeItemListEnd
+    \resumeSubheading
+      {Mabvuku High School}{Harare, Zimbabwe}
+      {High School Diploma}{Graduated Jan. 2024}
+      \resumeItemListStart
+        \resumeItem{Awards: 4th Place International Science \& Engineering Fair (ISEF) 2023}
+        \resumeItem{Overall Best Student 2022-23, Best in Physics (3 consecutive years)}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Data Science \& AI Engineering Intern}{Jan. 2024 -- Aug. 2024}
+      {Educait}{New York, USA \& Harare, Zimbabwe}
+      \resumeItemListStart
+        \resumeItem{Helped deploy AI applications using OpenAI, Anthropic, and Google-GenAI APIs to 300+ students across 10 institutions}
+        \resumeItem{Built production RAG systems with ChromaDB and MongoDB, improving query response accuracy by 40\%}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Math \& Programming Instructor}{Jan. 2024 -- June. 2024}
+      {Mabvuku High School}{Harare, Zimbabwe}
+      \resumeItemListStart
+        \resumeItem{Taught A-level Mathematics, Physics, and Statistics to 80+ students, achieving 95\% pass rate}
+        \resumeItem{Led after-school programming clubs, teaching Python and Machine Learning to 10 students}
+        \resumeItem{Mentored students who won gold medals at national science fairs and represented Zimbabwe internationally}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{SAILFLOW: Smart Automated AI-powered Last-minute Flood Forecasting \& Warning System} $|$ \emph{Python, PyTorch, OpenCV, Raspberry Pi/Jetson, IoT, SMS}}{2022 -- 2023}
+          \resumeItemListStart
+            \resumeItem{Built a low-cost, solar-powered IoT weather station and alert device to forecast and warn flash floods for last-mile communities}
+            \resumeItem{Developed on-device precipitation nowcasting using cloud imagery and sensor data to produce hourly forecasts 0--10 hours ahead}
+            \resumeItem{Modeled analytical water-level dynamics by combining rainfall with drainage/infiltration to predict flash flood risk}
+            \resumeItem{Implemented multi-channel alerts (sirens/lights, SMS, radio) with tiered risk levels and local-language messaging}
+            \resumeItem{Project page: \href{https://solve.mit.edu/solutions/83423}{MIT Solve — SAILFLOW}}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{Vector: AI-Powered Data Science Agent} $|$ \emph{Python, FastAPI, Docker, WebSockets}}{Aug. -- Oct. 2024}
+          \resumeItemListStart
+            \resumeItem{Developed a self-correcting, neuro-symbolic data science agent that performs complex data analysis, cleaning, transformations, and modeling by generating and executing Python code}
+            \resumeItem{Engineered a secure, sandboxed execution environment using Docker to isolate code execution}
+            \resumeItem{Designed asynchronous backend using FastAPI and WebSockets for real-time communication}
+            \resumeItem{Created dynamic frontend interface visualizing agent's cognitive states for enhanced user trust}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{Keeper and Clerk: Financial Analysis \& Accounting Agent Platform} $|$ \emph{Python, FastAPI, Next.js}}{2024}
+          \resumeItemListStart
+            \resumeItem{Architected multi-agent system featuring central Assistance agent delegating to specialized Keeper and Clerk agents}
+            \resumeItem{Invented data indexing engine combining symbolic computation with OCR vision model for document parsing}
+            \resumeItem{Designed custom tools for AI agents and developed full-stack system with RESTful FastAPI backend}
+            \resumeItem{Integrated Next.js/React frontend via proxy API route for seamless user interaction}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{Bouncebooks: Full-Stack CRM, Accounting, and ERP Software} $|$ \emph{Next.js, MongoDB, NextAuth.js}}{2024}
+          \resumeItemListStart
+            \resumeItem{Built responsive frontend and backend with robust authentication and reusable component architecture}
+            \resumeItem{Engineered unique data analysis engine connecting directly to live MongoDB database}
+            \resumeItem{Generated "neuro-symbolic summaries" using Pandas for symbolic analysis and LLM for human-readable overviews}
+            \resumeItem{Implemented TTL cache to store data summaries, significantly improving response times}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{Data Science Competition: Predicting Probability of Default} $|$ \emph{Python, Scikit-learn, FastAPI}}{Jun. -- Jul. 2024}
+          \resumeItemListStart
+            \resumeItem{Implemented and compared Logistic Regression and Neural Network models with hyperparameter tuning}
+            \resumeItem{Conducted comprehensive data cleaning, EDA, and feature engineering on historical loan dataset}
+            \resumeItem{Logistic Regression achieved AUC-ROC of 0.8097 and F1 Score of 0.9361}
+            \resumeItem{Built production-ready FastAPI endpoints with data drift detection for model deployment}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+
+%-----------PROGRAMMING SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages}{: Python , JavaScript/TypeScript (Proficient), C++ (Intermediate), SQL (Intermediate)} \\
+     \textbf{ML/AI}{: PyTorch, TensorFlow, HuggingFace Transformers, Scikit-learn, OpenAI APIs, RAG Systems} \\
+     \textbf{Web}{: React, Next.js, FastAPI, Flask, Node.js, WebSockets, REST APIs} \\
+     \textbf{Databases}{: MongoDB, ChromaDB, PostgreSQL} \\
+     \textbf{Tools}{: Git, Docker, GCP, Jupyter, VS Code}
+    }}
+ \end{itemize}
+
+
+%-----------LEADERSHIP & RECOGNITION-----------
+\section{Leadership \& Recognition}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Conference Speaker}{2024}
+      {Multiple Venues}{}
+      \resumeItemListStart
+        \resumeItem{Google Developer Group (GDG) Harare DevFest 2024: "Building Human-AI Systems for Responsible AI"}
+        \resumeItem{Deep Learning Indaba 2024: "What are AI Agents"}
+        \resumeItem{U.S. Embassy \& Harare Institute of Technology: "AI's Transformative Applications for Social Good"}
+        \resumeItem{Zimbabwe AI Week 2024: "Local Language LLMs"}
+      \resumeItemListEnd
+    \resumeSubheading
+      {International Recognition}{2023}
+      {Various Competitions}{}
+      \resumeItemListStart
+        \resumeItem{4th Place Winner: International Science \& Engineering Fair (ISEF) 2023}
+        \resumeItem{National Representative: AI for Good Robotic Competition (mentored winning team)}
+        \resumeItem{Community Impact: Taught 90+ students across mathematics, science, and programming}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+
+%-------------------------------------------
+\end{document}
