@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tinevimbo Musingadi | AI Safety & InfoSec</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <style>
+    /* Specific styles for index.html */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+    }
+    
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+    
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 1.1;
+      margin-bottom: var(--space-3);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      color: var(--text-variant);
+      margin-bottom: var(--space-6);
+    }
+    
+    .hero-image-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .hero-image {
+      width: 100%;
+      max-width: 400px;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 50px var(--primary-glow);
+      filter: grayscale(20%) contrast(1.1);
+    }
+    
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, var(--primary-transparent) 0%, transparent 100%);
+      pointer-events: none;
+      border-radius: var(--radius-lg);
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: var(--space-6);
+      border-left: 2px solid var(--ghost-border);
+      margin-top: var(--space-6);
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: var(--space-6);
+    }
+    
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: calc(var(--space-6) * -1 - 6px);
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary-glow);
+    }
+    
+    .timeline-date {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+    
+    .timeline-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text-main);
+    }
+    
+    .timeline-subtitle {
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      color: var(--text-variant);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Skills Progress */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+      margin-top: var(--space-6);
+    }
+    
+    @media (min-width: 768px) {
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+    }
+    
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="index.html" class="logo">T.MUSINGADI</a>
+      <div class="nav-links">
+        <a href="#about" class="nav-link">About</a>
+        <a href="projects.html" class="nav-link">Projects & Research</a>
+        <a href="blog.html" class="nav-link">Blog</a>
+        <a href="resume.html" class="nav-link">Resume</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="btn btn-ghost" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;">Light Mode</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero container">
+    <div class="grid" style="align-items: center; width: 100%;">
+      <div class="hero-content" style="grid-column: span 12; @media (min-width: 768px) { grid-column: span 7; }">
+        <div>
+          <span class="label" style="color: var(--primary);">System Status: Active</span>
+          <h1 class="hero-title">
+            Hi, I am <br>
+            <span style="color: var(--primary);">Tinevimbo Musingadi.</span>
+          </h1>
+          <h2 class="hero-subtitle">
+            I am a 
+            <span class="typewrite" data-period="2000" data-type='["Engineer.", "Information Security Student.", "AI Researcher.", "Builder."]'>
+              <span class="wrap"></span>
+            </span>
+          </h2>
+          <p style="max-width: 600px; font-size: 1.25rem; margin-bottom: var(--space-6);">
+            Working at the intersection of AI Safety & Information Security. Building safe, robust, and interpretable agents.
+          </p>
+          <div style="display: flex; gap: 1rem;">
+            <a href="projects.html" class="btn btn-primary">View My Work</a>
+            <a href="resume.html" class="btn btn-ghost">Read Resume</a>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image-container" style="grid-column: span 12; @media (min-width: 768px) { grid-column: span 5; }">
+        <img src="assets/profile.png" alt="Tinevimbo Musingadi Placeholder" class="hero-image">
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="container asymmetric-section">
+    <div class="grid">
+      <div class="asymmetric-header">
+        <h2 class="page-title">Mission &<br>Vision</h2>
+        <p class="mono" style="color: var(--primary); font-size: 0.875rem;">// The Core Philosophy</p>
+      </div>
+      
+      <div class="asymmetric-content" style="grid-column: span 12; @media (min-width: 768px) { grid-column: 5 / -1; }">
+        <div class="card" style="margin-bottom: var(--space-12);">
+          <p style="font-size: 1.25rem; color: var(--text-main); font-style: italic; border-left: 2px solid var(--primary); padding-left: 1rem;">
+            "To become an AI Engineer who asks the big questions at the intersection of cybersecurity and machine intelligence — preventing attacks, advancing model capabilities, and building AI that is safe by design."
+          </p>
+          <p style="margin-top: 1rem;">
+            I am driven by the belief that the next frontier of cybersecurity is not just protecting systems from humans — but building AI systems that are safe, interpretable, and robust against adversarial threats from the ground up.
+          </p>
+        </div>
+
+        <h3>What I Care About</h3>
+        <div class="skill-list" style="margin-bottom: var(--space-12);">
+          <span class="tag">Mechanistic Interpretability</span>
+          <span class="tag">Scalable Oversight & AI Safety</span>
+          <span class="tag">Agent Design</span>
+          <span class="tag">AI × Cybersecurity</span>
+        </div>
+
+        <div class="grid">
+          <div style="grid-column: span 12; @media (min-width: 768px) { grid-column: span 6; }">
+            <h3>Experience</h3>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-date">Jan 2024 — Aug 2024</div>
+                <div class="timeline-title">Data Science & AI Engineer Intern</div>
+                <div class="timeline-subtitle">Educait | New York & Harare</div>
+                <p>Deployed AI applications using OpenAI, Anthropic, and Google-GenAI. Built production RAG systems, improving accuracy by 40%.</p>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-date">Jan 2024 — Jun 2024</div>
+                <div class="timeline-title">Math & Programming Instructor</div>
+                <div class="timeline-subtitle">Mabvuku High School</div>
+                <p>Taught A-level Math, Physics, and Stats. Led programming clubs and mentored national science fair medalists.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="grid-column: span 12; @media (min-width: 768px) { grid-column: span 6; }">
+            <h3>Education & Accolades</h3>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-date">Expected 2029</div>
+                <div class="timeline-title">Information Security & Assurance (B.Tech)</div>
+                <div class="timeline-subtitle">Harare Institute of Technology</div>
+                <p>Freshman. Focusing on Cryptography, Machine Learning, and OS Security.</p>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-date">2023</div>
+                <div class="timeline-title">4th Place, Intel ISEF</div>
+                <div class="timeline-subtitle">International Science & Engineering Fair</div>
+                <p>Invented SAILFLOW: a flash flood detection and early warning system using IoT sensors and LSTM-based neural networks.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <h3 style="margin-top: var(--space-12);">Technical Skills</h3>
+        <div class="skills-grid">
+          <div>
+            <h4 class="mono" style="font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--primary);">Languages & Databases</h4>
+            <div class="skill-list">
+              <span class="tag">Python</span>
+              <span class="tag">JavaScript/TypeScript</span>
+              <span class="tag">C++</span>
+              <span class="tag">SQL</span>
+              <span class="tag">MongoDB</span>
+              <span class="tag">ChromaDB</span>
+              <span class="tag">PostgreSQL</span>
+            </div>
+          </div>
+          <div>
+            <h4 class="mono" style="font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--primary);">ML, AI & Web</h4>
+            <div class="skill-list">
+              <span class="tag">PyTorch</span>
+              <span class="tag">TensorFlow</span>
+              <span class="tag">Transformers</span>
+              <span class="tag">RAG</span>
+              <span class="tag">React / Next.js</span>
+              <span class="tag">FastAPI</span>
+              <span class="tag">Docker</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- External JS -->
+  <script src="js/main.js"></script>
+</body>
+</html>
