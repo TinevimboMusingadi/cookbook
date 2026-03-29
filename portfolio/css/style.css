@@ -1,0 +1,300 @@
+/* Base CSS variables and Design System for The Engineering Editorial */
+:root {
+  /* Dark Mode (Default Deep Tech) */
+  --surface: #131316;
+  --surface-lowest: #0e0e11;
+  --surface-low: #1b1b1e;
+  --surface-high: #2a2a2d;
+  --surface-highest: #353438;
+  
+  --primary: #00daf3;
+  --primary-transparent: rgba(0, 218, 243, 0.15);
+  --primary-glow: rgba(0, 218, 243, 0.04);
+  --primary-container: #001e22;
+  --on-primary: #00363d;
+  
+  --secondary-container: #2f4865;
+  --on-secondary-container: #9eb7d8;
+  
+  --text-main: #e4e1e5;
+  --text-variant: #c4c6cc;
+  
+  --ghost-border: rgba(142, 145, 150, 0.2);
+  --ghost-border-focus: #00daf3;
+
+  /* Typography */
+  --font-display: 'Manrope', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+  
+  /* Spacing */
+  --space-3: 0.75rem;
+  --space-6: 1.5rem;
+  --space-12: 3rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  
+  /* Radii */
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-full: 9999px;
+}
+
+[data-theme="light"] {
+  /* Premium Monochrome Light Mode */
+  --surface: #ffffff;
+  --surface-lowest: #fdfdfd;
+  --surface-low: #f5f5f5;
+  --surface-high: #ebebeb;
+  --surface-highest: #e0e0e0;
+  
+  --primary: #0a0a0a;
+  --primary-transparent: rgba(10, 10, 10, 0.15);
+  --primary-glow: rgba(10, 10, 10, 0.04);
+  --primary-container: #1a1a1a;
+  --on-primary: #ffffff;
+  
+  --secondary-container: #e5e5e5;
+  --on-secondary-container: #333333;
+  
+  --text-main: #111111;
+  --text-variant: #555555;
+  
+  --ghost-border: rgba(50, 50, 50, 0.15);
+  --ghost-border-focus: #0a0a0a;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--surface);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Typography */
+h1, h2, h3, h4, .headline {
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+
+.mono, .label, .tag {
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+p {
+  color: var(--text-variant);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Layout utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-6);
+}
+
+/* Thematic offsets */
+.asymmetric-section {
+  padding-top: var(--space-20);
+  padding-bottom: var(--space-20);
+}
+
+.asymmetric-header {
+  grid-column: span 12;
+  margin-bottom: var(--space-12);
+}
+
+@media (min-width: 768px) {
+  .asymmetric-header {
+    grid-column: span 4;
+    margin-bottom: 0;
+  }
+  .asymmetric-content {
+    grid-column: 5 / -1;
+  }
+}
+
+/* Components */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px var(--primary-glow);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--primary);
+}
+
+.btn-ghost:hover {
+  background: var(--surface-highest);
+}
+
+.tag {
+  display: inline-flex;
+  font-size: 0.75rem;
+  background: var(--surface-high);
+  border: 1px solid var(--primary-transparent);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  color: var(--text-main);
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(19, 19, 22, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--ghost-border);
+}
+
+[data-theme="light"] .nav {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.nav .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+}
+
+.logo {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--primary);
+  letter-spacing: -0.05em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-variant);
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: var(--text-main);
+}
+
+/* Hover shifts & No Line Rule */
+.card {
+  background: var(--surface-low);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  background: var(--surface-high);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px var(--primary-glow);
+}
+
+/* Form Inputs */
+.input-field {
+  width: 100%;
+  background: var(--surface-lowest);
+  border: none;
+  border-bottom: 1px solid var(--ghost-border);
+  padding: 1rem 0;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: border-bottom-width 0.2s, border-color 0.2s;
+}
+
+.input-field:focus {
+  outline: none;
+  border-bottom: 2px solid var(--ghost-border-focus);
+}
+
+/* Typwriter animation */
+.typewrite > .wrap { 
+  border-right: 2px solid var(--primary);
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+/* Sub-page headers */
+.page-header {
+  padding-top: 150px;
+  padding-bottom: 50px;
+  border-bottom: 1px solid var(--ghost-border);
+  margin-bottom: var(--space-12);
+}
+
+.page-title {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+/* Desktop sizing grid overrides mostly handle by grid base */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+}
