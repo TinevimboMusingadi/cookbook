@@ -93,99 +93,28 @@
     </div>
   </nav>
 
-  <main class="resume-container">
-    <div class="page-header" style="text-align: center;">
+  <main class="resume-container" style="max-width: 1000px; padding-top: 100px;">
+    <div class="page-header" style="text-align: center; border-bottom: none; padding-bottom: 2rem;">
       <h1 class="page-title">Curriculum Vitae</h1>
-      <p style="font-size: 1.125rem;">Tinevimbo Musingadi | AI Engineer & InfoSec Researcher</p>
+      <p style="font-size: 1.125rem; margin-bottom: 1.5rem;">Tinevimbo Musingadi | AI Engineer & InfoSec Researcher</p>
+      
       <div style="margin-top: 1rem;">
-        <a href="#" onclick="window.print();" class="btn btn-primary">Save PDF</a>
+        <a href="assets/tine_september.pdf" download class="btn btn-primary">Download PDF</a>
       </div>
     </div>
 
-    <!-- Education -->
-    <section class="resume-section">
-      <h2 class="resume-section-title">// Education</h2>
-      <div class="resume-item">
-        <div class="resume-item-header">
-          <h3 class="resume-item-title">Harare Institute of Technology (HIT)</h3>
-          <span class="resume-item-date">Aug 2024 -- Present</span>
+    <!-- PDF Embed -->
+    <section class="resume-section" style="height: 100vh; margin-top: 2rem;">
+      <object data="assets/tine_september.pdf" type="application/pdf" width="100%" height="100%" style="border-radius: var(--radius-md); box-shadow: 0 10px 40px var(--primary-glow); border: 1px solid var(--ghost-border);">
+        <div style="text-align: center; padding: 3rem; background: var(--surface-low); border-radius: var(--radius-md);">
+          <p style="margin-bottom: 1rem;">Your browser does not support rendering PDFs inline or the PDF file is missing.</p>
+          <a href="assets/tine_september.pdf" class="btn btn-primary" download>Click here to download the PDF</a>
+          <p style="margin-top: 2rem; color: var(--text-variant); font-size: 0.875rem;">
+            (Developer Note: Please compile `tine_september.tex` to PDF and place it in the `assets/` folder as `tine_september.pdf`)
+          </p>
         </div>
-        <div class="resume-item-org">B.Tech in Information Security and Assurance</div>
-        <ul class="resume-list">
-          <li>Freshman. Deepening foundations in Systems Architecture, Applied Cryptography, Web Technologies, and Neural Networks.</li>
-          <li>Developing custom symbolic execution frameworks on language models inside HIT research labs.</li>
-        </ul>
-      </div>
+      </object>
     </section>
-
-    <!-- Experience -->
-    <section class="resume-section">
-      <h2 class="resume-section-title">// Experience</h2>
-      <div class="resume-item">
-        <div class="resume-item-header">
-          <h3 class="resume-item-title">Data Science & AI Engineer</h3>
-          <span class="resume-item-date">Jan 2024 -- Aug 2024</span>
-        </div>
-        <div class="resume-item-org">Educait (EdTech)</div>
-        <ul class="resume-list">
-          <li>Architected and deployed highly robust Retriever-Augmented Generation (RAG) models for educational tutors.</li>
-          <li>Increased context-retrieval accuracy by ~40% utilizing dense dimension reduction paradigms.</li>
-          <li>Maintained scalable cloud infrastructure using Pinecone Vector DB and LangChain semantics.</li>
-        </ul>
-      </div>
-
-      <div class="resume-item">
-        <div class="resume-item-header">
-          <h3 class="resume-item-title">Mathematics & Programming Instructor</h3>
-          <span class="resume-item-date">Jan 2024 -- Jun 2024</span>
-        </div>
-        <div class="resume-item-org">Mabvuku High School</div>
-        <ul class="resume-list">
-          <li>Instructed Advanced Level Mathematics, Mechanics, Physics, and Statistics to ~100 students.</li>
-          <li>Led the Engineering and Programming club, steering three national science fair finalists.</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Technical Projects -->
-    <section class="resume-section">
-      <h2 class="resume-section-title">// Key Engineering Projects</h2>
-      <div class="resume-item">
-        <div class="resume-item-header">
-          <h3 class="resume-item-title">Keeper - Financial Analyst Agent</h3>
-        </div>
-        <ul class="resume-list">
-          <li>Built a deterministic AI pipeline tracking state updates on MongoDB across highly complex financial data.</li>
-          <li>Developed modular "Hands" and "Brains" abstractions using Next.js UI integration with Python REST sockets.</li>
-        </ul>
-      </div>
-
-      <div class="resume-item">
-        <div class="resume-item-header">
-          <h3 class="resume-item-title">Gab - Agent Version Control</h3>
-        </div>
-        <ul class="resume-list">
-          <li>Programmed a low-level, tamper-evident interaction logging protocol in 'Go'.</li>
-          <li>Employed BadgarDB and SHA-256 Merkle trees to reconstruct multi-agent branching steps perfectly.</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Awards & Skills -->
-    <section class="resume-section">
-      <h2 class="resume-section-title">// Honors & Recognition</h2>
-      <div class="resume-item">
-        <div class="resume-item-header">
-          <h3 class="resume-item-title">International Science & Engineering Fair (ISEF)</h3>
-          <span class="resume-item-date">Dallas, TX | 2023</span>
-        </div>
-        <ul class="resume-list">
-          <li><strong>4th Place Grand Award:</strong> Environmental Engineering division for "SAILFLOW".</li>
-          <li>Developed IoT-based flash flood detection modules interfaced with Long Short-Term Memory Neural logic for predictive rainfall signaling.</li>
-        </ul>
-      </div>
-    </section>
-
   </main>
   
   <script src="js/main.js"></script>
