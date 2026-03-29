@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog | Tinevimbo Musingadi</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+  
+  <style>
+    .featured-post {
+      background: var(--surface-low);
+      border-radius: var(--radius-lg);
+      padding: var(--space-12);
+      border: 1px solid var(--ghost-border);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: var(--space-20);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .featured-post:hover {
+      box-shadow: 0 30px 60px var(--primary-glow);
+    }
+
+    .featured-post::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--primary);
+    }
+
+    .post-date {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container">
+      <a href="index.html" class="logo">T.MUSINGADI</a>
+      <div class="nav-links">
+        <a href="index.html#about" class="nav-link">About</a>
+        <a href="projects.html" class="nav-link">Projects & Research</a>
+        <a href="blog.html" class="nav-link" style="color: var(--text-main);">Blog</a>
+        <a href="resume.html" class="nav-link">Resume</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <button id="theme-toggle" class="btn btn-ghost" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;">Light Mode</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header" style="padding-top: 150px; padding-bottom: 50px;">
+      <h1 class="page-title">Essays & Memos</h1>
+      <p style="font-size: 1.25rem; max-width: 600px;">Thoughts on Machine Learning, Agent Architectures, Security Policies, and mechanistic explorations.</p>
+    </div>
+
+    <section>
+      <!-- Featured interactive presentation -->
+      <div class="featured-post">
+        <div class="post-date">INTERACTIVE PRESENTATION // LATEST</div>
+        <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem;">The Art of Context Engineering</h2>
+        <p style="font-size: 1.125rem; margin-bottom: 2rem; max-width: 800px;">
+          Building effective AI agents is no longer just about optimizing prompts for zero-shot accuracy—it's about continuously curating structured states in sliding context windows dynamically. Take a deep dive into Transformer memory optimization and RAG state logic in my interactive presentation built on bespoke rendering loops.
+        </p>
+        <a href="context_engineering_blog.html" class="btn btn-primary" target="_blank">View Dynamic Presentation</a>
+      </div>
+      
+      <!-- More standard posts could go here -->
+      <div style="text-align: center; color: var(--text-variant); padding: var(--space-12) 0;">
+        <span class="mono">No more transmissions stored in local node. Return to command sequence.</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
